@@ -1,28 +1,24 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
+import { ListGroup, ListGroupItem } from 'reactstrap';
 import Addresses from '../api/addresses.js';
 
 // App component - represents the whole app
-class App extends Component {
+const App = ({ addresses }) => (
+  <ListGroup>
+    {addresses.map(address => (
+      <ListGroupItem key={address._id}>
+        {address.address}
+      </ListGroupItem>
+    ))}
+  </ListGroup>
+);
 
-  render() {
-    return (
-      <div>
-        <ul>
-          {this.props.addresses.map((address, idx) => (
-            <li key={idx}>
-              {address.address}
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-}
+App.propTypes = {
+  addresses: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
-
-export default withTracker(() => {
-  return {
-    addresses: Addresses.find({}, { limit: 10 }).fetch(),
-  };
-})(App);
+export default withTracker(() => ({
+  addresses: Addresses.find({}, { limit: 10 }).fetch(),
+}))(App);
