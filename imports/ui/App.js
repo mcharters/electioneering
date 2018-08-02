@@ -1,24 +1,33 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withTracker } from 'meteor/react-meteor-data';
-import { ListGroup, ListGroupItem } from 'reactstrap';
-import Addresses from '../api/addresses.js';
+import React, { PureComponent } from 'react';
+import AddressList from './AddressList.js';
 
 // App component - represents the whole app
-const App = ({ addresses }) => (
-  <ListGroup>
-    {addresses.map(address => (
-      <ListGroupItem key={address._id}>
-        {address.address}
-      </ListGroupItem>
-    ))}
-  </ListGroup>
-);
+class App extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      position: null,
+    };
+  }
 
-App.propTypes = {
-  addresses: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => { this.setState({ position }); },
+    );
+  }
 
-export default withTracker(() => ({
-  addresses: Addresses.find({}, { limit: 10 }).fetch(),
-}))(App);
+  render() {
+    const { position } = this.state;
+
+    if (position === null) {
+      return (
+        <h1>
+          {'Finding location'}
+        </h1>);
+    }
+
+    return <AddressList position={position} />;
+  }
+}
+
+export default App;
