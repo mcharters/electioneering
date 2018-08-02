@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, GEOSPHERE
 import csv
 
 client = MongoClient('localhost', 3001)
@@ -23,3 +23,8 @@ def documents(reader):
 with open('./Addresses.csv') as csvfile:
     reader = csv.DictReader(csvfile)
     addresses.insert_many(documents(reader))
+
+    # create indices
+    addresses.create_index('street')
+    addresses.create_index('address')
+    addresses.create_index([('location', GEOSPHERE)])
