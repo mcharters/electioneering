@@ -2,13 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { ListGroup, ListGroupItem } from 'reactstrap';
+import { Link } from 'react-router-dom';
 import Addresses from '../api/addresses.js';
 
 // App component - represents the whole app
 const AddressList = ({ addresses }) => (
   <ListGroup>
     {addresses.map(address => (
-      <ListGroupItem key={address._id}>
+      <ListGroupItem
+        key={address._id}
+        tag={Link}
+        to={`/addresses/${address._id._str}`}
+        className="list-group-item-action"
+      >
         {address.address}
       </ListGroupItem>
     ))}
