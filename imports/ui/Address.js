@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
-import { Mongo } from 'meteor/mongo'
+import { Mongo } from 'meteor/mongo';
 import Addresses from '../api/addresses.js';
 
 const Address = ({ address }) => (
