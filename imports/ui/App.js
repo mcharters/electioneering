@@ -1,14 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ChooseAddress from './ChooseAddress';
 import Address from './Address';
 
 const App = () => (
   <Router>
-    <div>
+    <Switch>
       <Route exact path="/" component={ChooseAddress} />
       <Route path="/addresses/:id" component={Address} />
-    </div>
+    </Switch>
   </Router>
 );
 
