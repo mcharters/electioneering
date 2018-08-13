@@ -20,6 +20,10 @@ if (Meteor.isServer) {
   }));
 
   Meteor.publish('addresses.withId', id => Addresses.find({ _id: new Mongo.ObjectID(id) }));
+
+  Meteor.publish('addresses.search', search => Addresses.find({
+    $text: { $search: search },
+  }));
 }
 
 export default Addresses;
