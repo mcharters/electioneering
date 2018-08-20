@@ -9,7 +9,7 @@ export default withTracker(({ search }) => {
     const handle = Meteor.subscribe('addresses.search', search);
     return {
       loading: !handle.ready(),
-      addresses: Addresses.find({}, { limit: 10 }).fetch(),
+      addresses: Addresses.find({}, { limit: 10, sort: { address: 1 } }).fetch(),
     };
   }
 

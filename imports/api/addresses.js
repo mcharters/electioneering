@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
 
-const Addresses = new Mongo.Collection('addresses');
+const Addresses = new Mongo.Collection('addresses', { idGeneration: 'MONGO' });
 
 if (Meteor.isServer) {
   Meteor.publish('addresses.nearby', (longitude, latitude) => Addresses.find({
@@ -22,7 +22,7 @@ if (Meteor.isServer) {
   Meteor.publish('addresses.withId', id => Addresses.find({ _id: new Mongo.ObjectID(id) }));
 
   Meteor.publish('addresses.search', search => Addresses.find({
-    $text: { $search: search },
+    $text: { $search: `"${search}"` },
   }));
 }
 
