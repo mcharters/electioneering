@@ -6,33 +6,48 @@ import { AutoForm } from 'uniforms-bootstrap4';
 import Addresses from '../api/addresses';
 import People from '../api/people';
 
-const Person = ({ person, loading, address }) => {
-  if (loading) {
-    return null;
+class Person extends React.PureComponent {
+  handleSubmit = (person) => {
+    console.log(person);
   }
 
-  return (
-    <div>
-      <h1>
-        {`Add new person at ${address.address}`}
-      </h1>
-      <AutoForm schema={People.schema} />
-    </div>
-  );
-};
+  render() {
+    const { person, loading, address } = this.props;
+
+    if (loading) {
+      return null;
+    }
+
+    return (
+      <div>
+        <h1>
+          {`Add new person at ${address.address}`}
+        </h1>
+        <AutoForm
+          schema={People.schema}
+          model={person}
+          onSubmit={this.handleSubmit}
+        />
+      </div>
+    );
+  }
+}
 
 export default withTracker(({ match }) => {
   const addressHandle = Meteor.subscribe('addresses.withId', match.params.addressId);
   const address = Addresses.findOne(new Mongo.ObjectID(match.params.addressId));
 
   let person = null;
-  if (match.params.personId === 'new') {
-    person = {};
+  let personReady = true;
+  if (match.params.personId !== 'new') {
+    const personHandle = Meteor.subscribe('people.withId', match.params.personId);
+    person = People.findOne(new Mongo.ObjectID(match.params.personId));
+    personReady = personHandle.ready();
   }
 
   return {
     person,
     address,
-    loading: !addressHandle.ready(),
+    loading: !addressHandle.ready() || !personReady,
   };
 })(Person);
