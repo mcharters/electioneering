@@ -25,5 +25,5 @@ with open('./Addresses.csv') as csvfile:
     addresses.insert_many(documents(reader))
 
     # create indices
-    addresses.create_index('address', TEXT)
+    addresses.create_index([('address', TEXT)])
     addresses.create_index([('location', GEOSPHERE)])

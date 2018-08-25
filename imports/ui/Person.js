@@ -8,7 +8,23 @@ import People from '../api/people';
 
 class Person extends React.PureComponent {
   handleSubmit = (person) => {
-    console.log(person);
+    const { address, history } = this.props;
+
+    if (!person._id) {
+      People.insert({ ...person, addressId: address._id }, (err) => {
+        if (!err) {
+          history.goBack();
+        }
+      });
+    } else {
+      People.update(person._id, {
+        $set: person,
+      }, {}, (err) => {
+        if (!err) {
+          history.goBack();
+        }
+      });
+    }
   }
 
   render() {
@@ -21,12 +37,12 @@ class Person extends React.PureComponent {
     return (
       <div>
         <h1>
-          {`Add new person at ${address.address}`}
+          {`${person ? 'Edit' : 'Add new'} person at ${address.address}`}
         </h1>
         <AutoForm
           schema={People.schema}
-          model={person}
           onSubmit={this.handleSubmit}
+          model={person}
         />
       </div>
     );
@@ -37,10 +53,10 @@ export default withTracker(({ match }) => {
   const addressHandle = Meteor.subscribe('addresses.withId', match.params.addressId);
   const address = Addresses.findOne(new Mongo.ObjectID(match.params.addressId));
 
-  let person = null;
+  let person;
   let personReady = true;
   if (match.params.personId !== 'new') {
-    const personHandle = Meteor.subscribe('people.withId', match.params.personId);
+    const personHandle = Meteor.subscribe('person.withId', match.params.personId);
     person = People.findOne(new Mongo.ObjectID(match.params.personId));
     personReady = personHandle.ready();
   }

@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { Button } from 'reactstrap';
+import { Button, ListGroup, ListGroupItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import Addresses from '../api/addresses.js';
+import People from '../api/people.js';
 
 class Address extends React.PureComponent {
   handleNobodyHomeClick = (e) => {
@@ -20,7 +21,7 @@ class Address extends React.PureComponent {
   }
 
   render() {
-    const { loading, address, match } = this.props;
+    const { loading, address, match, people } = this.props;
 
     if (loading) {
       return (
@@ -54,6 +55,25 @@ class Address extends React.PureComponent {
         >
           {'Add Person'}
         </Button>
+        {people.length > 0 && (
+          <div>
+            <h2>
+              {'People'}
+            </h2>
+            <ListGroup>
+              {people.map(person => (
+                <ListGroupItem
+                  key={person._id}
+                  tag={Link}
+                  to={`/addresses/${address._id._str}/people/${person._id._str}`}
+                  className="list-group-item-action"
+                >
+                  {person.name}
+                </ListGroupItem>
+              ))}
+            </ListGroup>
+          </div>
+        )}
       </div>
     );
   }
@@ -77,9 +97,11 @@ Address.defaultProps = {
 };
 
 export default withTracker(({ match }) => {
-  const handle = Meteor.subscribe('addresses.withId', match.params.id);
+  const addressHandle = Meteor.subscribe('addresses.withId', match.params.id);
   const address = Addresses.findOne(new Mongo.ObjectID(match.params.id));
-  const loading = !handle.ready();
+  const peopleHandle = Meteor.subscribe('people.withAddressId', match.params.id);
+  const people = People.find({ addressId: new Mongo.ObjectID(match.params.id) }).fetch();
+  const loading = !addressHandle.ready() || !peopleHandle.ready();
 
-  return { loading, address };
+  return { loading, address, people };
 })(Address);
