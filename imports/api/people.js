@@ -14,7 +14,15 @@ People.schema = new SimpleSchema({
       type: 'email',
     },
   },
-  phone: {
+  homePhone: {
+    type: SimpleSchema.RegEx.Phone,
+    optional: true,
+    uniforms: {
+      component: TextField,
+      type: 'tel',
+    },
+  },
+  cellPhone: {
     type: SimpleSchema.RegEx.Phone,
     optional: true,
     uniforms: {
@@ -27,7 +35,7 @@ People.schema = new SimpleSchema({
     allowedValues: [1, 2, 3, 4],
     optional: true,
   },
-  reiminder: {
+  reminder: {
     type: Boolean,
     optional: true,
   },
@@ -36,7 +44,8 @@ People.schema = new SimpleSchema({
     optional: true,
   },
   lawnSign: {
-    type: Boolean,
+    type: String,
+    allowedValues: ['Requested', 'Delivered'],
     optional: true,
   },
   canvas: {
