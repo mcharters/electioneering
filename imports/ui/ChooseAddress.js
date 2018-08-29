@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import {
   Form, FormGroup, Input,
 } from 'reactstrap';
+import queryString from 'query-string';
 import NearbyAddressList from './NearbyAddressList.js';
 import SearchAddressList from './SearchAddressList.js';
 
@@ -9,9 +10,12 @@ import SearchAddressList from './SearchAddressList.js';
 class ChooseAddress extends PureComponent {
   constructor(props) {
     super(props);
+
+    const params = queryString.parse(props.location.search);
+
     this.state = {
       position: null,
-      search: '',
+      search: params.search || '',
     };
   }
 
