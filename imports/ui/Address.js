@@ -14,14 +14,16 @@ class Address extends React.PureComponent {
     const { history, address } = this.props;
 
     Addresses.update(address._id, {
-      $set: { people: [] },
+      $set: { visited: true },
     }, {}, () => {
       history.push('/');
     });
   }
 
   render() {
-    const { loading, address, match, people } = this.props;
+    const {
+      loading, address, match, people,
+    } = this.props;
 
     if (loading) {
       return (
@@ -36,7 +38,7 @@ class Address extends React.PureComponent {
         <h1>
           {address.address}
         </h1>
-        {address.people === undefined ? (
+        {!address.visited ? (
           <Button
             block
             onClick={this.handleNobodyHomeClick}
