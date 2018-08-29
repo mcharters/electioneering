@@ -20,3 +20,6 @@ insecure                # Allow all DB writes from clients (for prototyping)
 react-meteor-data
 static-html
 reywood:publish-composite
+accounts-ui
+accounts-password
+useraccounts:bootstrap
