@@ -15,7 +15,7 @@ A location-aware web app to help political candidates canvas for municipal elect
    - **Notes**:
      - Electioneering uses location services to determine nearby addresses, which requires SSL to be enabled - Meteor Up can handle this for you, just read the section on [setting up an nginx proxy](http://meteor-up.com/docs.html#reverse-proxy).
      - The address import script assumes your mongo database is named `meteor`, and Meteor Up names gives your database the name of your app, so make sure you name your app `meteor` when configuring, or use your database name when running the address import in production.
-2. Provision your server and deply the app according to Meteor Up's [instructions](http://meteor-up.com/getting-started.html)
+2. Provision your server and deploy the app according to Meteor Up's [instructions](http://meteor-up.com/getting-started.html)
 3. Import addresses on the server. Meteor Up only bundles the meteor resources it knows about, so for the time being you'll have to copy the python script and CSV file up to your server and run it there with the `--production` flag to use Meteor Up's default mongodb port. You'll need to have python and pymongo installed on your server too of course.
 
 ## User Authentication
