@@ -11,14 +11,22 @@ class Person extends React.PureComponent {
     const { address, history } = this.props;
 
     if (!person._id) {
-      People.insert({ ...person, addressId: address._id }, (err) => {
+      People.insert({
+        ...person,
+        addressId: address._id,
+        created: new Date(),
+        updated: new Date(),
+      }, (err) => {
         if (!err) {
           history.goBack();
         }
       });
     } else {
       People.update(person._id, {
-        $set: person,
+        $set: {
+          ...person,
+          updated: new Date(),
+        },
       }, {}, (err) => {
         if (!err) {
           history.goBack();
