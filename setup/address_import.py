@@ -4,7 +4,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Populate the electioneering database with open data")
 parser.add_argument('--production', dest='production', action='store_true')
-parser.add_arugment('--ward', dest='ward', action='store')
+parser.add_argument('--ward', dest='ward', action='store')
 parser.set_defaults(production=False)
 
 args = parser.parse_args()
