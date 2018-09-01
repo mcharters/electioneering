@@ -9,9 +9,6 @@ parser.set_defaults(production=False)
 
 args = parser.parse_args()
 
-if not args.ward:
-    exit("Please specify a ward!")
-
 mongoPort = 3001
 if args.production:
     mongoPort = 27017
@@ -23,7 +20,7 @@ addresses = db.addresses
 
 def documents(reader):
     for row in reader:
-        if row['WARD'] != args.ward:
+        if args.ward and row['WARD'] != args.ward:
             continue
 
         yield {
