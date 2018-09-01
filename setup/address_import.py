@@ -1,14 +1,29 @@
 from pymongo import MongoClient, GEOSPHERE, TEXT
 import csv
+import argparse
 
-client = MongoClient('localhost', 3001)
+parser = argparse.ArgumentParser(description="Populate the electioneering database with open data")
+parser.add_argument('--production', dest='production', action='store_true')
+parser.add_arugment('--ward', dest='ward', action='store')
+parser.set_defaults(production=False)
+
+args = parser.parse_args()
+
+if not args.ward:
+    exit("Please specify a ward!")
+
+mongoPort = 3001
+if args.production:
+    mongoPort = 27017
+
+client = MongoClient('localhost', mongoPort)
 
 db = client.meteor
 addresses = db.addresses
 
 def documents(reader):
     for row in reader:
-        if row['WARD'] != '5':
+        if row['WARD'] != args.ward:
             continue
 
         yield {
