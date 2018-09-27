@@ -1,7 +1,9 @@
 import { Mongo } from 'meteor/mongo';
 import { Meteor } from 'meteor/meteor';
+import { publishComposite } from 'meteor/reywood:publish-composite';
 import SimpleSchema from 'simpl-schema';
 import { TextField, LongTextField } from 'uniforms-bootstrap4';
+import Addresses from './addresses';
 
 const People = new Mongo.Collection('people', { idGeneration: 'MONGO' });
 People.schema = new SimpleSchema({
@@ -67,6 +69,17 @@ if (Meteor.isServer) {
   Meteor.publish('person.withId', id => People.find({ _id: new Mongo.ObjectID(id) }));
 
   Meteor.publish('people.withAddressId', id => People.find({ addressId: new Mongo.ObjectID(id)}));
+
+  publishComposite('people', {
+    find() {
+      return People.find({});
+    },
+    children: [{
+      find(person) {
+        return Addresses.find({ _id: person.addressId });
+      },
+    }],
+  });
 }
 
 export default People;
