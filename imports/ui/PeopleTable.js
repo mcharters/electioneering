@@ -114,6 +114,11 @@ const PeopleTable = ({ people, loading }) => {
           accessor: 'lawnSign',
         },
         {
+          Header: 'Voted',
+          accessor: 'voted',
+          Cell: ({ value }) => (value ? 'Yes' : 'No'),
+        },
+        {
           Header: 'Created',
           accessor: 'created',
           Cell: ({ value }) => (value ? value.toLocaleString() : ''),

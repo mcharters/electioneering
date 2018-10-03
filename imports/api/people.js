@@ -58,6 +58,10 @@ People.schema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
+  voted: {
+    type: Boolean,
+    optional: true,
+  },
   notes: {
     type: String,
     optional: true,
