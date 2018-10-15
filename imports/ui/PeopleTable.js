@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import ReactTable from 'react-table';
+import { Parser } from 'json2csv';
 import People from '../api/people';
 import Addresses from '../api/addresses';
 import 'react-table/react-table.css';
@@ -67,64 +68,95 @@ EmailCell.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
+const getCSVURL = (people) => {
+  const fields = [
+    'name',
+    'address.address',
+    'email',
+    'homePhone',
+    'cellPhone',
+    'status',
+    'reminder',
+    'newsletter',
+    'canvas',
+    'donate',
+    'lawnSign',
+    'voted',
+    'notes',
+    'created',
+    'updated',
+    'address.poll',
+    'address.street',
+  ];
+  const csvParser = new Parser({ fields });
+  const csv = csvParser.parse(people);
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  return URL.createObjectURL(blob);
+};
+
 const PeopleTable = ({ people, loading }) => {
   if (loading) {
     return null;
   }
 
   return (
-    <ReactTable
-      data={people}
-      resolveData={data => data.map(person => ({
-        ...person,
-        address: Addresses.findOne(person.addressId),
-      }))}
-      columns={[
-        {
-          Header: 'Name',
-          accessor: 'name',
-          Cell: NameCell,
-        },
-        {
-          Header: 'Address',
-          accessor: 'address.address',
-          Cell: AddressCell,
-        },
-        {
-          Header: 'Email',
-          accessor: 'email',
-          Cell: EmailCell,
-        },
-        {
-          Header: 'Home Phone',
-          accessor: 'homePhone',
-          Cell: TelCell,
-        },
-        {
-          Header: 'Cell Phone',
-          accessor: 'cellPhone',
-          Cell: TelCell,
-        },
-        {
-          Header: 'Status',
-          accessor: 'status',
-        },
-        {
-          Header: 'Lawn Sign',
-          accessor: 'lawnSign',
-        },
-        {
-          Header: 'Voted',
-          accessor: 'voted',
-          Cell: ({ value }) => (value ? 'Yes' : 'No'),
-        },
-        {
-          Header: 'Updated',
-          accessor: 'updated',
-          Cell: ({ value }) => (value ? value.toLocaleString() : ''),
-        },
-      ]}
-    />
+    <div>
+      <ReactTable
+        data={people}
+        columns={[
+          {
+            Header: 'Name',
+            accessor: 'name',
+            Cell: NameCell,
+          },
+          {
+            Header: 'Address',
+            accessor: 'address.address',
+            Cell: AddressCell,
+          },
+          {
+            Header: 'Email',
+            accessor: 'email',
+            Cell: EmailCell,
+          },
+          {
+            Header: 'Home Phone',
+            accessor: 'homePhone',
+            Cell: TelCell,
+          },
+          {
+            Header: 'Cell Phone',
+            accessor: 'cellPhone',
+            Cell: TelCell,
+          },
+          {
+            Header: 'Status',
+            accessor: 'status',
+          },
+          {
+            Header: 'Lawn Sign',
+            accessor: 'lawnSign',
+          },
+          {
+            Header: 'Voted',
+            accessor: 'voted',
+            Cell: ({ value }) => (value ? 'Yes' : 'No'),
+          },
+          {
+            Header: 'Updated',
+            accessor: 'updated',
+            Cell: ({ value }) => (value ? value.toLocaleString() : ''),
+          },
+        ]}
+      />
+      <a
+        href={getCSVURL(people)}
+        download="voters.csv"
+      >
+        {'Download as CSV'}
+      </a>
+    </div>
   );
 };
 
@@ -138,7 +170,10 @@ export default withTracker(() => {
   const people = People.find({}).fetch();
 
   return {
-    people,
+    people: people.map(person => ({
+      ...person,
+      address: Addresses.findOne(person.addressId),
+    })),
     loading: !peopleHandle.ready(),
   };
 })(PeopleTable);
