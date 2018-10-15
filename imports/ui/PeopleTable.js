@@ -119,8 +119,8 @@ const PeopleTable = ({ people, loading }) => {
           Cell: ({ value }) => (value ? 'Yes' : 'No'),
         },
         {
-          Header: 'Created',
-          accessor: 'created',
+          Header: 'Updated',
+          accessor: 'updated',
           Cell: ({ value }) => (value ? value.toLocaleString() : ''),
         },
       ]}
