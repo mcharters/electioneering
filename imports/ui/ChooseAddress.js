@@ -6,7 +6,6 @@ import queryString from 'query-string';
 import NearbyAddressList from './NearbyAddressList.js';
 import SearchAddressList from './SearchAddressList.js';
 
-// App component - represents the whole app
 class ChooseAddress extends PureComponent {
   constructor(props) {
     super(props);

@@ -1,23 +1,40 @@
-import React, { Component } from 'react';
-import { Template } from 'meteor/templating';
-import { Blaze } from 'meteor/blaze';
+import React, { useState } from 'react';
 
-export default class AccountsUIWrapper extends Component {
-  // Use Meteor Blaze to render login buttons
-  componentDidMount() {
-    this.view = Blaze.render(
-      Template.atForm,
-      this.container,
-    );
-  }
+const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  componentWillUnmount() {
-    // Clean up Blaze view
-    Blaze.remove(this.view);
-  }
+  const submit = e => {
+    e.preventDefault();
 
-  render() {
-    // Just render a placeholder container that will be filled in
-    return <span ref={(container) => { this.container = container; }} />;
-  }
-}
+    Meteor.loginWithPassword(username, password);
+  };
+
+  return (
+    <form onSubmit={submit} className="login-form">
+      <label htmlFor="username">Username</label>
+
+      <input
+        type="text"
+        placeholder="Username"
+        name="username"
+        required
+        onChange={e => setUsername(e.target.value)}
+      />
+
+      <label htmlFor="password">Password</label>
+
+      <input
+        type="password"
+        placeholder="Password"
+        name="password"
+        required
+        onChange={e => setPassword(e.target.value)}
+      />
+
+      <button type="submit">Log In</button>
+    </form>
+  );
+};
+
+export default Login;

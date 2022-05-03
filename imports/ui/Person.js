@@ -2,7 +2,7 @@ import React from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import { AutoForm } from 'uniforms-bootstrap4';
+import { AutoForm } from 'uniforms-bootstrap5';
 import Addresses from '../api/addresses';
 import People from '../api/people';
 

@@ -6,7 +6,6 @@ import ReactTable from 'react-table';
 import { Parser } from 'json2csv';
 import People from '../api/people';
 import Addresses from '../api/addresses';
-import 'react-table/react-table.css';
 
 const TelCell = ({ value }) => {
   if (!value) return null;

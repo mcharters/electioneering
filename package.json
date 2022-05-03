@@ -1,52 +1,34 @@
 {
-  "name": "electioneering",
+  "name": "electioneeringv2",
   "private": true,
   "scripts": {
     "start": "meteor run",
     "test": "meteor test --once --driver-package meteortesting:mocha",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
-    "visualize": "meteor --production --extra-packages bundle-visualizer",
-    "lint": "eslint .",
-    "pretest": "npm run lint --silent"
-  },
-  "eslintConfig": {
-    "extends": "@meteorjs/eslint-config-meteor",
-    "rules": {
-      "linebreak-style": "off",
-      "no-underscore-dangle": "off"
-    }
+    "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
-    "@babel/runtime": "^7.0.0-beta.51",
-    "bootstrap": "^4.1.3",
-    "json2csv": "^4.2.1",
-    "meteor-node-stubs": "^0.4.1",
-    "query-string": "^6.1.0",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-router-dom": "^4.3.1",
-    "react-table": "^6.8.6",
-    "reactstrap": "^6.3.1",
-    "simpl-schema": "^1.5.3",
-    "uniforms": "^1.25.0",
-    "uniforms-bootstrap4": "^1.25.0"
+    "@babel/runtime": "^7.15.4",
+    "bootstrap": "^5.1.3",
+    "json2csv": "^5.0.7",
+    "meteor-node-stubs": "^1.2.1",
+    "prop-types": "^15.8.1",
+    "query-string": "^7.1.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.3.1",
+    "react-table": "^7.7.0",
+    "reactstrap": "^9.0.2",
+    "simpl-schema": "^1.12.0",
+    "uniforms": "^3.9.1",
+    "uniforms-bootstrap5": "^3.9.1",
+    "uniforms-bridge-simple-schema-2": "^3.9.1"
   },
   "meteor": {
     "mainModule": {
-      "client": "client/main.js",
+      "client": "client/main.jsx",
       "server": "server/main.js"
     },
     "testModule": "tests/main.js"
-  },
-  "devDependencies": {
-    "@meteorjs/eslint-config-meteor": "^1.0.5",
-    "babel-eslint": "^8.2.6",
-    "eslint": "^5.2.0",
-    "eslint-config-airbnb": "^17.0.0",
-    "eslint-import-resolver-meteor": "^0.4.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-meteor": "^5.0.0",
-    "eslint-plugin-react": "^7.10.0"
   }
 }
