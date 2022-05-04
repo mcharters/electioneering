@@ -41,6 +41,9 @@ class Address extends React.PureComponent {
         {!address.visited ? (
           <Button
             block
+            color="primary"
+            outline
+            style={{ marginBottom: '1rem' }}
             onClick={this.handleNobodyHomeClick}
           >
             {'Nobody Home'}
@@ -52,6 +55,7 @@ class Address extends React.PureComponent {
         )}
         <Button
           block
+          color="primary"
           tag={Link}
           to={`${match.url}/people/new`}
         >
