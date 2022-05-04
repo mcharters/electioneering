@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Meteor } from 'meteor/meteor';
-import ReactTable from 'react-table';
+import { useTable } from 'react-table';
 import { Parser } from 'json2csv';
+import { Table } from 'reactstrap';
 import People from '../api/people';
 import Addresses from '../api/addresses';
 
@@ -24,35 +25,39 @@ TelCell.defaultProps = {
   value: undefined,
 };
 
-const NameCell = ({ original, value }) => (
-  <a href={`/addresses/${original.addressId._str}/people/${original._id._str}`}>
+const NameCell = ({ row, value }) => (
+  <a href={`/addresses/${row.original.addressId._str}/people/${row.original._id._str}`}>
     {value}
   </a>
 );
 
 NameCell.propTypes = {
-  original: PropTypes.shape({
-    addressId: PropTypes.shape({
-      _str: PropTypes.string,
-    }),
-    _id: PropTypes.shape({
-      _str: PropTypes.string,
-    }),
+  row: PropTypes.shape({
+    original: PropTypes.shape({
+      addressId: PropTypes.shape({
+        _str: PropTypes.string,
+      }),
+      _id: PropTypes.shape({
+        _str: PropTypes.string,
+      }),
+    }).isRequired,
   }).isRequired,
   value: PropTypes.string.isRequired,
 };
 
-const AddressCell = ({ original, value }) => (
-  <a href={`/addresses/${original.addressId._str}`}>
+const AddressCell = ({ row, value }) => (
+  <a href={`/addresses/${row.original.addressId._str}`}>
     {value}
   </a>
 );
 
 AddressCell.propTypes = {
-  original: PropTypes.shape({
-    addressId: PropTypes.shape({
-      _str: PropTypes.string,
-    }),
+  row: PropTypes.shape({
+    original: PropTypes.shape({
+      addressId: PropTypes.shape({
+        _str: PropTypes.string,
+      }),
+    }).isRequired,
   }).isRequired,
   value: PropTypes.string.isRequired,
 };
@@ -99,63 +104,92 @@ const PeopleTable = ({ people, loading }) => {
     return null;
   }
 
+  const data = useMemo(() => people);
+
+  const columns = useMemo(() => [
+    {
+      Header: 'Name',
+      accessor: 'name',
+      Cell: NameCell,
+    },
+    {
+      Header: 'Address',
+      accessor: 'address.address',
+      Cell: AddressCell,
+    },
+    {
+      Header: 'Email',
+      accessor: 'email',
+      Cell: EmailCell,
+    },
+    {
+      Header: 'Home Phone',
+      accessor: 'homePhone',
+      Cell: TelCell,
+    },
+    {
+      Header: 'Cell Phone',
+      accessor: 'cellPhone',
+      Cell: TelCell,
+    },
+    {
+      Header: 'Status',
+      accessor: 'status',
+    },
+    {
+      Header: 'Lawn Sign',
+      accessor: 'lawnSign',
+    },
+    {
+      Header: 'Voted',
+      accessor: 'voted',
+      Cell: ({ value }) => (value ? 'Yes' : 'No'),
+    },
+    {
+      Header: 'Updated',
+      accessor: 'updated',
+      Cell: ({ value }) => (value ? value.toLocaleString() : ''),
+    },
+  ]);
+
+  const { headerGroups, rows, prepareRow } = useTable({ columns, data });
+
   return (
-    <div>
-      <ReactTable
-        data={people}
-        columns={[
-          {
-            Header: 'Name',
-            accessor: 'name',
-            Cell: NameCell,
-          },
-          {
-            Header: 'Address',
-            accessor: 'address.address',
-            Cell: AddressCell,
-          },
-          {
-            Header: 'Email',
-            accessor: 'email',
-            Cell: EmailCell,
-          },
-          {
-            Header: 'Home Phone',
-            accessor: 'homePhone',
-            Cell: TelCell,
-          },
-          {
-            Header: 'Cell Phone',
-            accessor: 'cellPhone',
-            Cell: TelCell,
-          },
-          {
-            Header: 'Status',
-            accessor: 'status',
-          },
-          {
-            Header: 'Lawn Sign',
-            accessor: 'lawnSign',
-          },
-          {
-            Header: 'Voted',
-            accessor: 'voted',
-            Cell: ({ value }) => (value ? 'Yes' : 'No'),
-          },
-          {
-            Header: 'Updated',
-            accessor: 'updated',
-            Cell: ({ value }) => (value ? value.toLocaleString() : ''),
-          },
-        ]}
-      />
+    <>
+      <Table>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>
+                  {column.render('Header')}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => (
+                  <td {...cell.getCellProps()}>
+                    {cell.render('Cell')}
+                  </td>
+                ))}
+              </tr>
+            )
+          })}
+        </tbody>
+      </Table>
       <a
         href={getCSVURL(people)}
         download="voters.csv"
       >
         {'Download as CSV'}
       </a>
-    </div>
+    </>
   );
 };
 
